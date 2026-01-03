@@ -1,11 +1,15 @@
-# fini-clock
+# FINI Clock
 
 ![GitHub Issues](https://img.shields.io/github/issues/fini-net/fini-clock)
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/fini-net/fini-clock)
 ![GitHub License](https://img.shields.io/github/license/fini-net/fini-clock)
 ![GitHub watchers](https://img.shields.io/github/watchers/fini-net/fini-clock)
 
-Clock for mobile and open platforms.
+Clock for mobile and open platforms. ⏰ 🕓 🕰
+
+## Status
+
+Nothing is here yet.  Hopefully tomorrow will be more substantive.
 
 ## Contributing
 
