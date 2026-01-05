@@ -8,6 +8,14 @@
 # The above will handle all files NOT found below
 #
 
+# Godot-specific files
+*.tscn text eol=lf merge=union
+*.tres text eol=lf merge=union
+*.godot text eol=lf
+*.gd text eol=lf diff=gdscript
+*.gdshader text eol=lf
+*.import text eol=lf
+
 # Documents
 *.bibtex   text diff=bibtex
 *.doc      diff=astextplain
