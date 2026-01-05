@@ -10,3 +10,8 @@ import? '.just/shellcheck.just'
 list:
 	just --list
 	@echo "{{GREEN}}Your justfile is waiting for more scripts and snippets{{NORMAL}}"
+
+# install prerequisites for development
+[group('Utility')]
+devsetup:
+	git config diff.gdscript.xfuncname '^[\t ]*(class|func|signal)[\t ].*$'
