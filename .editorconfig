@@ -24,3 +24,8 @@ indent_size = 2
 [{justfile,*.just}]
 indent_style = space
 indent_size = 4
+
+# gdscript for godot apps
+[*.gd]
+indent_style = tab
+indent_size = 4
