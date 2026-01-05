@@ -1,15 +1,20 @@
 extends Node2D
 
-@onready var time_label = $time_label
+@onready var time_label = $CenterContainer/time_label
 
 func _ready():
-	update_time()
-
-func _process(_delta):
+	var timer = Timer.new()
+	add_child(timer)
+	timer.timeout.connect(update_time)
+	timer.wait_time = 1.0
+	timer.start()
 	update_time()
 
 func update_time():
-	var time_dict = Time.get_time_dict_from_system(true)  # true for UTC
+	if not time_label:
+		return
+	var time_dict = Time.get_time_dict_from_system(true)
 	var hours = time_dict.hour
 	var minutes = time_dict.minute
-	time_label.text = "%02d:%02d" % [hours, minutes]
+	var seconds = time_dict.second
+	time_label.text = "%02d:%02d:%02d" % [hours, minutes, seconds]
