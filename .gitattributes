@@ -1,11 +1,20 @@
 # Common settings that generally should always be used with your language specific settings
 
 # Auto detect text files and perform LF normalization
-*          text=auto
+# Normalize EOL for all files that Git considers text files.
+*          text=auto eol=lf
 
 #
 # The above will handle all files NOT found below
 #
+
+# Godot-specific files
+*.tscn text eol=lf merge=union
+*.tres text eol=lf merge=union
+*.godot text eol=lf
+*.gd text eol=lf diff=gdscript
+*.gdshader text eol=lf
+*.import text eol=lf
 
 # Documents
 *.bibtex   text diff=bibtex
