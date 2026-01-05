@@ -38,8 +38,9 @@ go.work.sum
 # repo-level cache for justfiles, etc.
 /.cache
 
-# our hugo run artifact
-/public.prev
-
 # tasks for this repo are in github actions
 /TODO.md
+
+# Godot 4+ specific ignores
+.godot/
+/android/
