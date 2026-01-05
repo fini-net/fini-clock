@@ -74,6 +74,7 @@ The application consists of a single main scene (`scenes/main.tscn`) controlled 
 - **time_label** (`Label`) - Displays the current time with 80pt font
 
 The `main.gd` script:
+
 - Uses `@onready` to reference the time label node
 - Creates a Timer node in `_ready()` that fires every 1.0 seconds
 - Connects the timer's `timeout` signal to `update_time()` function
@@ -83,6 +84,7 @@ The `main.gd` script:
 ### Godot scene format notes
 
 Scene files (`.tscn`) use Godot's text-based scene format:
+
 - `[gd_scene]` header defines the format version and dependencies
 - `[ext_resource]` sections link to scripts and assets via UIDs
 - `[node]` sections define the scene tree hierarchy
