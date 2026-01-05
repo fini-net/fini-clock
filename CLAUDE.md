@@ -4,100 +4,103 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This is a GitHub repository template that implements best practices for open source projects. It's designed to be cloned and customized for new repositories. The template includes GitHub community standards compliance, automated workflows, and a command-line driven development process.
+FINI Clock is a mobile clock application built with Godot 4.5. The project targets mobile and open platforms, implementing a simple digital clock interface with real-time updates.
 
 ## Development Workflow
 
-This repo uses `just` (command runner) for all development tasks. The workflow is entirely command-line based using `just` and the GitHub CLI (`gh`).
+This repo inherits the standard `just` command runner workflow from the template-repo. The workflow is entirely command-line based using `just` and the GitHub CLI (`gh`).
 
 ### Standard development cycle
 
-1. `just branch <name>` - Create a new feature branch (format: `$USER/YYYY-MM-DD-<name>`)
-2. Make changes and commit (last commit message becomes PR title)
-3. `just pr` - Create PR, push changes, and watch checks (waits 8s for GitHub API)
-4. `just merge` - Squash merge PR, delete branch, return to main, and pull latest
-5. `just sync` - Return to main branch and pull latest (escape hatch)
+1. `just devsetup` - Configure git diff settings for GDScript (one-time setup)
+2. `just branch <name>` - Create a new feature branch (format: `$USER/YYYY-MM-DD-<name>`)
+3. Make changes and commit (last commit message becomes PR title)
+4. `just pr` - Create PR, push changes, and watch checks (waits 8s for GitHub API)
+5. `just merge` - Squash merge PR, delete branch, return to main, and pull latest
+6. `just sync` - Return to main branch and pull latest (escape hatch)
 
 ### Additional commands
 
 - `just` or `just list` - Show all available recipes
 - `just prweb` - Open current PR in browser
 - `just release <version>` - Create a GitHub release with auto-generated notes
-- `just clean_readme` - Generate a clean README from template (strips template documentation)
 - `just compliance_check` - Run custom repo compliance checks
 - `just shellcheck` - Run shellcheck on all bash scripts in just recipes
-- `just utcdate` - Print UTC date in ISO format (used in branch names)
+
+## Godot Development
+
+### Engine version and configuration
+
+- **Engine**: Godot 4.5
+- **Target platforms**: Mobile (using mobile rendering method)
+- **Main scene**: `res://scenes/main.tscn`
+- **Project configuration**: `project.godot`
+
+### Code quality checks
+
+The GitHub Actions workflow `godot-checks.yml` runs on all pushes and PRs that affect `addons/**` or `scripts/**`:
+
+- **gdformat** - GDScript formatting checks (`gdformat --diff .`)
+- **gdlint** - GDScript linting checks (`gdlint .`)
+- **codespell** - Spell checking (skips `./addons` and `*.po` files)
+
+Run these locally before creating a PR to catch issues early.
+
+### Git configuration
+
+The `just devsetup` recipe configures git to properly diff GDScript files:
+
+```bash
+git config diff.gdscript.xfuncname '^[\t ]*(class|func|signal)[\t ].*$'
+```
+
+This shows function/class/signal names in diff headers for better context.
 
 ## Architecture
 
-### Modular justfile structure
+### Project structure
 
-The main `justfile` imports four modules:
+- `scripts/` - GDScript files (game logic)
+- `scenes/` - Godot scene files (.tscn)
+- `addons/` - Third-party Godot plugins (currently empty)
+- `.godot/` - Godot editor cache and metadata (not committed)
 
-- `.just/compliance.just` - Custom compliance checks for repo health (validates all GitHub community standards)
-- `.just/gh-process.just` - Git/GitHub workflow automation (core PR lifecycle)
-- `.just/pr-hook.just` - Optional pre-PR hooks for project-specific automation (e.g., Hugo rebuilds)
-- `.just/shellcheck.just` - Shellcheck linting for bash scripts in just recipes
+### Current implementation
 
-### Git/GitHub workflow details
+The application consists of a single main scene (`scenes/main.tscn`) controlled by `scripts/main.gd`:
 
-The `.just/gh-process.just` module implements the entire PR lifecycle:
+- **Main node** (`Node2D`) - Root node for the scene
+- **CenterContainer** - Centers the time display in the window (1152x648 default)
+- **time_label** (`Label`) - Displays the current time with 80pt font
 
-- **Branch creation** - Dated branches with `$USER/YYYY-MM-DD-<name>` format
-- **PR creation** - First commit message becomes PR title, all commits listed in body
-- **Sanity checks** - Prevents empty PRs, enforces branch strategy via hidden recipes (`_on_a_branch`, `_has_commits`, `_main_branch`)
-- **AI integration** - After PR checks complete, displays GitHub Copilot and Claude Code review comments in terminal
-- **Merge automation** - Squash merge, delete remote branch, return to main, pull latest
+The `main.gd` script:
+- Uses `@onready` to reference the time label node
+- Creates a Timer node in `_ready()` that fires every 1.0 seconds
+- Connects the timer's `timeout` signal to `update_time()` function
+- Fetches system time using `Time.get_time_dict_from_system(true)` for UTC
+- Formats time as HH:MM:SS with zero-padding
 
-### Shellcheck integration
+### Godot scene format notes
 
-The `.just/shellcheck.just` module extracts and validates bash scripts:
-
-- **Script extraction** - Uses awk to identify recipes with bash shebangs (`#!/usr/bin/env bash` or `#!/bin/bash`)
-- **Automatic detection** - Scans all justfiles in repo (main `justfile` and `.just/*.just`)
-- **Temporary file handling** - Creates temporary files for each script and runs shellcheck with `-x -s bash` flags
-- **Detailed reporting** - Shows which file and recipe each issue is in, with colored output
-- **Exit code** - Returns 1 if issues found, 0 if all scripts pass
-
-### GitHub Actions
-
-Six workflows run on PRs and pushes to main:
-
-- **markdownlint** - Enforces markdown standards using `markdownlint-cli2`
-- **checkov** - Security scanning for GitHub Actions (continues on error, outputs SARIF)
-- **actionlint** - Lints GitHub Actions workflow files
-- **auto-assign** - Automatically assigns issues/PRs to `chicks-net`
-- **claude-code-review** - Claude AI review automation
-- **claude** - Additional Claude integration
-
-### Markdown linting
-
-Configuration in `.markdownlint.yml`:
-
-- MD013 (line length) is disabled
-- MD041 (first line h1) is disabled
-- MD042 (no empty links) is disabled
-- MD004 (list style) enforces dashes
-- MD010 (tabs) ignores code blocks
-
-Run locally: `markdownlint-cli2 **/*.md`
-
-## Template customization
-
-When using this template for a new project, search and replace:
-
-- `fini-net` → your GitHub org
-- `template-repo` → your repo name
-- `chicks-net` → your references (especially in `.github/workflows/auto-assign.yml`)
-
-Run `just clean_readme` to strip template documentation from README.
+Scene files (`.tscn`) use Godot's text-based scene format:
+- `[gd_scene]` header defines the format version and dependencies
+- `[ext_resource]` sections link to scripts and assets via UIDs
+- `[node]` sections define the scene tree hierarchy
+- Properties use `key = value` syntax (e.g., `text = "--:--:--"`)
 
 ## Important implementation notes
 
-- All git commands in `.just/gh-process.just` use standard git (no aliases required)
-- The `pr` recipe runs optional pre-PR hooks if `.just/pr-hook.just` exists
-- PR checks poll every 5 seconds for faster feedback
-- Release notes for workflow changes are tracked in `.just/RELEASE_NOTES.md`
-- The `.just` directory contains modular just recipes that can be copied to other projects for updates
-- just catches errors from commands when the recipe isn't a "#!" form that runs another scripting engine
-- just colors come from built-in constants <https://just.systems/man/en/constants.html>
+- GDScript uses snake_case for variables and functions
+- Node references use `$NodePath` syntax or `@onready` variables
+- Signal connections use the `.connect()` method (Godot 4.x style)
+- The project uses UTC time via `Time.get_time_dict_from_system(true)`
+- All Godot resource paths use `res://` protocol
+
+## Modular justfile structure
+
+The main `justfile` imports four modules from `.just/`:
+
+- `compliance.just` - Custom compliance checks for repo health
+- `gh-process.just` - Git/GitHub workflow automation (core PR lifecycle)
+- `pr-hook.just` - Optional pre-PR hooks (currently placeholder)
+- `shellcheck.just` - Shellcheck linting for bash scripts in just recipes
