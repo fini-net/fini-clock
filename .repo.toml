@@ -1,0 +1,15 @@
+# .repo.toml
+
+[about]
+description = "Clock for mobile and open platforms ⏰ 🕓 🕰"
+topics = ["clock", "godot-application", "ios-app", "macos-app"]
+
+[urls]
+git_ssh = "git@github.com:fini-net/fini-clock.git"
+web_url = "https://github.com/fini-net/fini-clock"
+
+[flags]
+claude = false
+claude-review = false
+copilot-review = false
+standard-release = true
