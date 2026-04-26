@@ -1,5 +1,6 @@
 # FINI Clock
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/fini-net/fini-clock/badge)](https://scorecard.dev/viewer/?uri=github.com/fini-net/fini-clock)
 ![GitHub Issues](https://img.shields.io/github/issues/fini-net/fini-clock)
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/fini-net/fini-clock)
 ![GitHub License](https://img.shields.io/github/license/fini-net/fini-clock)
