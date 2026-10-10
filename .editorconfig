@@ -29,3 +29,8 @@ indent_size = 4
 [*.gd]
 indent_style = tab
 indent_size = 4
+
+# 2-space JSON files synced from fini-net/template-repo (#399)
+[{.github/actionlint-matcher.json,.github/renovate.json}]
+indent_style = space
+indent_size = 2
